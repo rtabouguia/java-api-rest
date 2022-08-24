@@ -12,68 +12,63 @@ import java.util.List;
  * @author RAISA
  */
 public class AnnuaireDAO {
-    
-    public List <Personne> listInscrits;
+
+    private List<Personne> personnes;
+    private Long nextId;
 
     public AnnuaireDAO() {
-        this.listInscrits = new ArrayList();
+        this.personnes = new ArrayList();
+        this.nextId = 1L;
     }
-    //ajouter une personne
-    public void addPersonne(String nom, String prenom){
-           if (nom==null || prenom==null) {
-            System.out.println("La personne ne peut pas être créée");
-            return;
-        }
-          Personne personne = new Personne();
-          personne.setNom(nom);
-          personne.setPrenom(prenom);
-          for(Personne inscrit: listInscrits){
-              if(inscrit.getNom().equals(nom) & inscrit.getPrenom().equals(prenom)){
-                   System.out.println(nom + "est déjà enregistré dans l'annuaire");
-                   break;
-              }
-          }
-        this.listInscrits.add(personne);
+
+    public Personne create(Personne personne) {
+        personne.setId(nextId);
+        personnes.add(personne);
+
+        nextId++;
+
+        return personne;
     }
-    
-    //afficher la liste des personnes inscrites
-    public List<Personne> getAllInscrits(){
-        return listInscrits;
+
+    public List<Personne> getPersonnes() {
+        return personnes;
     }
-    
-    //Afficher une personne specifique en recherchant via l'id
-    public Personne getPersonneById(int id){
-        Personne personneToFind = new Personne();
-        for(Personne inscrit: listInscrits){
-            if(inscrit.getId()==id){
-                personneToFind.setNom(inscrit.getNom());
-                personneToFind.setPrenom(inscrit.getPrenom());
+
+    public Personne getPersonneById(Long id) {
+
+        for (Personne p : personnes) {
+            if (p.getId().equals(id)) {
+                return p;
             }
-        } return personneToFind;
-    }
-    
-    //modifier une personne
-    public void updatePersonne(Personne personne){
-        
-        Personne personneToUpdate = getPersonneById(personne.getId());
-         if (personneToUpdate == null) {
-            System.out.println("La personne avec l'id:" + personne.getId() + " n'existe pas");
-            return;
         }
-        personneToUpdate.setNom(personne.getNom());
-        personneToUpdate.setPrenom(personne.getPrenom());
-       
+
+        return null;
     }
-    
-    //supprimer une personne 
-    public void deletepersonne(Personne personne){
-        Personne personneToDelete = getPersonneById(personne.getId());
-         if (personneToDelete == null) {
-            System.out.println("La personne n'existe pas");
-            return;
+
+    public boolean update(Long id, Personne personne) {
+
+        Personne toUpdate = getPersonneById(id);
+
+        if (toUpdate == null) {
+            return false;
         }
-         listInscrits.remove(personneToDelete);
+
+        personnes.remove(toUpdate);
+        personne.setId(id);
+        personnes.add(personne);
+
+        return true;
     }
     
-    
+    public boolean delete(Long id) {
+
+        Personne toDelete = getPersonneById(id);
+
+        if (toDelete == null) {
+            return false;
+        }
+
+        personnes.remove(toDelete);
+        return true;
+    }
 }
