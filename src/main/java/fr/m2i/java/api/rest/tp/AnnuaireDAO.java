@@ -13,39 +13,34 @@ import java.util.List;
  */
 public class AnnuaireDAO {
     
-    public List <Personne> listInscrits;
+   private List<Personne> personnes;
+    private Long nextId;
 
     public AnnuaireDAO() {
-        this.listInscrits = new ArrayList();
+        this.personnes = new ArrayList();
+        this.nextId = 1L;
     }
-    //ajouter une personne
-    public void addPersonne(String nom, String prenom){
-           if (nom==null || prenom==null) {
-            System.out.println("La personne ne peut pas être créée");
-            return;
-        }
-          Personne personne = new Personne();
-          personne.setNom(nom);
-          personne.setPrenom(prenom);
-          for(Personne inscrit: listInscrits){
-              if(inscrit.getNom().equals(nom) & inscrit.getPrenom().equals(prenom)){
-                   System.out.println(nom + "est déjà enregistré dans l'annuaire");
-                   break;
-              }
-          }
-        this.listInscrits.add(personne);
+
+    public Personne create(Personne personne) {
+        personne.setId(nextId);
+        personnes.add(personne);
+
+        nextId++;
+
+        return personne;
+    }
+
+    public List<Personne> getPersonnes() {
+        return personnes;
     }
     
-    //afficher la liste des personnes inscrites
-    public List<Personne> getAllInscrits(){
-        return listInscrits;
-    }
     
     //Afficher une personne specifique en recherchant via l'id
-    public Personne getPersonneById(int id){
+    public Personne getPersonneById(Long id){
         Personne personneToFind = new Personne();
-        for(Personne inscrit: listInscrits){
-            if(inscrit.getId()==id){
+        for(Personne inscrit: personnes){
+            if(inscrit.getId().equals(id)){
+                personneToFind.setId(id);
                 personneToFind.setNom(inscrit.getNom());
                 personneToFind.setPrenom(inscrit.getPrenom());
             }
@@ -66,13 +61,14 @@ public class AnnuaireDAO {
     }
     
     //supprimer une personne 
-    public void deletepersonne(Personne personne){
-        Personne personneToDelete = getPersonneById(personne.getId());
-         if (personneToDelete == null) {
-            System.out.println("La personne n'existe pas");
-            return;
+    public void deletepersonne(Long id){
+        for (Personne inscrit : personnes){
+            if(inscrit.getId().equals(id)){
+                personnes.remove(inscrit);
+            }
         }
-         listInscrits.remove(personneToDelete);
+       
+         
     }
     
     
