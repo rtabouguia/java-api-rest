@@ -15,8 +15,8 @@ import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
-@Provider
-@PreMatching
+@Provider  //pour que la librairie Jax prenne en compte notre classe
+@PreMatching  // le filtre ci dessous sera appelé avant que la requete ne soit matché avec une méthode de nos ressources
 public class AuthFilter implements ContainerRequestFilter {
     
   @Override
@@ -46,7 +46,7 @@ public class AuthFilter implements ContainerRequestFilter {
             );
         }
         
-        // Véréfie les identifiants envoyés
+        // Vérifie les identifiants envoyés
         User authentified = checkUser(lap[0], lap[1]);
 
         if (authentified == null) {
